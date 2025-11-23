@@ -1,19 +1,25 @@
 pipeline {
     agent any
 
-    options {
-        timestamps()
+    tools {
+        nodejs 'node24'     // must match EXACT name from Jenkins UI
     }
 
     stages {
-
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/Hamza525318/react-ci-cd.git'
+                git branch: 'main', url: 'https://github.com/Hamza525318/react-ci-cd-demo.git'
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Verify Node Version') {
+            steps {
+                sh 'node -v'
+                sh 'npm -v'
+            }
+        }
+
+        stage('Install') {
             steps {
                 sh 'npm install'
             }
@@ -27,11 +33,7 @@ pipeline {
     }
 
     post {
-        success {
-            echo 'Build succeeded'
-        }
-        failure {
-            echo 'Build failed'
-        }
+        success { echo 'Build success' }
+        failure { echo 'Build failed' }
     }
 }
